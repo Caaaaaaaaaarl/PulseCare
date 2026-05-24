@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PulseCare.Models.Reminder>
+@{
+    ViewData["Title"] = "My Health Plan & Reminders";
+}
+
+<div class="container mt-4">
+    <h3 class="text-success mb-4">My Health Plan & Reminders</h3>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            You currently have no active health reminders. Book a consultation to get your personalized diet and medication plan!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm @(item.IsCompleted ? "border-secondary bg-light" : "border-success")">
+                        <div class="card-body">
+                            <h5 class="card-title @(item.IsCompleted ? "text-muted text-decoration-line-through" : "text-dark")">
+                                @item.Message
+                            </h5>
+                            <p class="card-text text-muted mb-3">
+                                <small>Scheduled for: @item.ReminderDate.ToString("MMM dd, yyyy")</small>
+                            </p>
+
+                            @if (!item.IsCompleted)
+                            {
+                                <form method="post" asp-action="MarkComplete" asp-controller="Reminder">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success fw-bold">Mark as Done</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Completed</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="mt-4">
+        <a href="/Home/PatientDashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+</div>

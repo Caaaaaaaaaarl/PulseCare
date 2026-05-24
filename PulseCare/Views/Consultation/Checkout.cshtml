@@ -1,0 +1,54 @@
+﻿@model PulseCare.Models.Appointment
+@{
+    ViewData["Title"] = "Session Checkout";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Finalize Consultation: @ViewBag.PatientName</h4>
+                </div>
+                <div class="card-body">
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+
+                    <div class="alert alert-secondary">
+                        <strong>Patient's Symptoms:</strong> <br />
+                        @Model.Symptoms
+                    </div>
+
+                    <form method="post" asp-action="Checkout" asp-controller="Consultation">
+                        <input type="hidden" name="appointmentId" value="@Model.Id" />
+                        <input type="hidden" name="patientId" value="@Model.PatientId" />
+
+                        <div class="mb-3">
+                            <label class="fw-bold">Doctor's Clinical Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" required placeholder="Diagnosis and session summary..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="fw-bold">Diet Plan & Prescriptions (SDG 3)</label>
+                            <textarea name="prescription" class="form-control" rows="3" required placeholder="e.g. Low sodium diet, 30 mins cardio daily, Metformin 500mg..."></textarea>
+                            <small class="text-muted">Submitting this will automatically generate health reminders on the patient's dashboard.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="fw-bold">Consultation Fee ($)</label>
+                            <input type="number" step="0.01" name="fee" class="form-control" required value="50.00" />
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/Consultation/Queue" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-success fw-bold">Sign Ledger & Complete Session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

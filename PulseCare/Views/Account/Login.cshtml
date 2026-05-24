@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="text-center mb-4 text-primary">PulseCare Login</h3>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+
+                    <form method="post" asp-action="Login" asp-controller="Account">
+                        <div class="mb-3">
+                            <label>Email Address</label>
+                            <!-- Pre-filled with Patient email for faster testing -->
+                            <input type="email" name="email" class="form-control" required value="patient@pulsecare.com" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required value="123" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Log In</button>
+                    </form>
+
+                    <div class="mt-4 text-center text-muted">
+                        <small><b>Test Accounts:</b></small><br />
+                        <small>Patient: patient@pulsecare.com / 123</small><br />
+                        <small>Doctor: doctor@pulsecare.com / 123</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2>Welcome, @ViewBag.UserName</h2>
+<p class="text-muted">Physician Portal</p>
+<hr />
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Appointments</h5>
+                <p class="card-text">View patient triage data and start virtual consultations.</p>
+                <a href="/Consultation/Queue" class="btn btn-light text-primary">View Queue</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <a href="/Account/Logout" class="btn btn-outline-danger">Log Out</a>
+</div>

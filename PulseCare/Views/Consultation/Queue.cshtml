@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Patient Queue";
+}
+
+<div class="container mt-4">
+    <h3 class="text-primary mb-4">Pending Virtual Consultations</h3>
+
+    @if (ViewBag.Queue == null || ViewBag.Queue.Count == 0)
+    {
+        <div class="alert alert-info">You have no pending patients in your queue.</div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm">
+            <table class="table table-hover table-bordered bg-white">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Patient Name</th>
+                        <th>Triage & Symptoms</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Queue)
+                    {
+                        <tr>
+                            <td>@item.AppointmentDate.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                            <td class="fw-bold">@item.PatientName</td>
+                            <td>@item.Symptoms</td>
+                            <td>
+                                <a href="/Consultation/Checkout/@item.Id" class="btn btn-success btn-sm">Start Session & Checkout</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a href="/Home/DoctorDashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+</div>
