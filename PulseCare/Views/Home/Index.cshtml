@@ -1,20 +1,111 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to PulseCare";
+    // 🔑 Secure full-bleed display view space by disabling internal layouts panels sidebar grids
+    ViewData["HideSidebar"] = true;
 }
 
-<div class="container py-5 text-center">
-    <div class="row justify-content-center py-5">
-        <div class="col-lg-8">
-            <div class="d-inline-flex align-items-center justify-content-center px-3 py-1 fw-medium small mb-4 rounded-pill" style="background-color: var(--pc-primary-subtle); color: var(--pc-primary);">
-                🚀 Running on .NET 10 Web Engine
-            </div>
-            <h1 class="display-4 fw-bold mb-3" style="color: var(--pc-text); letter-spacing: -1px;">Welcome to PulseCare</h1>
-            <p class="lead px-md-5 mb-5" style="color: var(--pc-text-muted);">A streamlined, real-time clinical solution optimized for immediate e-medicine and chronic lifestyle metrics synchronization.</p>
+<div class="pc-landing-wrapper">
 
-            <div class="p-4 border text-start mx-auto rounded-3" style="background-color: var(--pc-surface); border-color: var(--pc-border) !important; max-width: 500px; box-shadow: var(--pc-shadow-card);">
-                <p class="mb-2 fw-medium" style="color: var(--pc-text);">Core Technical Reference Documentation:</p>
-                <span class="small d-block mb-0" style="color: var(--pc-text-muted);">Learn about <a class="fw-medium text-decoration-none" style="color: var(--pc-primary);" href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core Framework</a>.</span>
+    <header class="pc-landing-nav d-flex align-items-center justify-content-between px-4 py-3 bg-white shadow-sm">
+        <div class="d-flex align-items-center gap-2">
+            <span class="fs-4">🩺</span>
+            <span class="fw-bold tracking-tight text-dark" style="font-size: 1.2rem; letter-spacing: -0.5px;">PulseCare</span>
+        </div>
+
+        <div>
+            <a href="/Account/Login" class="btn btn-primary fw-semibold px-4 py-2"
+               style="background-color: #0284c7; border-color: #0284c7; font-size: 0.875rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.15);">
+                Log In to Portal
+            </a>
+        </div>
+    </header>
+
+    <section class="pc-landing-hero text-center py-5 px-3">
+        <div class="container max-width-md mx-auto py-4">
+            <span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill fw-semibold mb-3 small" style="font-size: 0.775rem; letter-spacing: 0.02em;">
+                ✨ Advanced Patient-Physician Architecture Node
+            </span>
+            <h1 class="display-5 fw-bold text-dark mb-3" style="letter-spacing: -1.2px; line-height: 1.15;">
+                Intelligent Medical Operations, <br /><span style="color: #0284c7;">Streamlined in Real-Time.</span>
+            </h1>
+            <p class="text-secondary mx-auto mb-4 fs-6" style="max-width: 580px; line-height: 1.6;">
+                PulseCare bridges the gap between patient diagnostics and clinical workflows. Experience live, rule-based medical triage scoring profiles, instantaneous reminder synchronization tracks, and unified historical health ledgers.
+            </p>
+            <div class="d-flex gap-2.5 justify-content-center">
+                <a href="/Account/Login" class="btn btn-dark px-4 py-2.5 fw-medium" style="background: #0f172a; border: none; font-size: 0.9rem; border-radius: 6px;">
+                    Get Started Now →
+                </a>
+                <a href="/Home/Privacy" class="btn btn-light border px-4 py-2.5 fw-medium text-secondary" style="font-size: 0.9rem; border-radius: 6px; background: #ffffff;">
+                    Review Data Privacy
+                </a>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="container max-width-lg py-5">
+        <div class="row g-4 justify-content-center">
+
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-white p-4" style="border-radius: 8px;">
+                    <div class="fs-2 mb-2">🤖</div>
+                    <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">Smart Triage Sorting</h5>
+                    <p class="text-muted small mb-0" style="line-height: 1.5;">
+                        Heuristic keyword sorting processes symptom entries on submission to automatically calculate clinical severity and alert queues.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-white p-4" style="border-radius: 8px;">
+                    <div class="fs-2 mb-2">💊</div>
+                    <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">Live Asynchronous Care Logs</h5>
+                    <p class="text-muted small mb-0" style="line-height: 1.5;">
+                        Patients can mark completed prescriptions and dietary goals inline instantly via background AJAX pipeline execution modules.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-white p-4" style="border-radius: 8px;">
+                    <div class="fs-2 mb-2">📜</div>
+                    <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">Immutable Chart Histories</h5>
+                    <p class="text-muted small mb-0" style="line-height: 1.5;">
+                        Maintains permanent clinical records, detailed diagnostic history notes, and historical logs accessible with zero latency.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 </div>
+
+<style>
+    body {
+        background-color: #f8fafc !important;
+    }
+
+    .pc-landing-wrapper {
+        margin: -1rem -1rem 0 -1rem;
+    }
+
+    .pc-landing-nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .pc-landing-hero {
+        background: radial-gradient(100% 100% at 50% 0%, rgba(2, 132, 199, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .max-width-md {
+        max-width: 720px;
+    }
+
+    .max-width-lg {
+        max-width: 1140px;
+    }
+</style>
