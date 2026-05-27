@@ -61,7 +61,7 @@ namespace PulseCare.Controllers
             return View();
         }
 
-        // GET: Consultation/CurrentPatients - Directory of active assigned patients
+        // 🔑 REVISED: GET: Consultation/CurrentPatients - Directory of active assigned patients with tracking IDs
         [HttpGet]
         public IActionResult CurrentPatients()
         {
@@ -76,6 +76,7 @@ namespace PulseCare.Controllers
                                where a.DoctorId == doctorId && a.Status == "Pending"
                                select new
                                {
+                                   AppointmentId = a.Id, // 🔑 Preserved to bind details popup action triggers
                                    PatientId = u.Id,
                                    PatientName = u.FullName,
                                    PatientEmail = u.Email,
@@ -91,6 +92,7 @@ namespace PulseCare.Controllers
                 }
                 return new
                 {
+                    Id = rp.AppointmentId, // 🔑 Map to record data model parameters
                     rp.PatientId,
                     rp.PatientName,
                     rp.PatientEmail,
@@ -122,7 +124,7 @@ namespace PulseCare.Controllers
                               orderby a.AppointmentDate descending
                               select new
                               {
-                                  a.Id, // Included to bind background AJAX tracking requests
+                                  a.Id,
                                   PatientName = u.FullName,
                                   ConcludedDate = a.AppointmentDate,
                                   RawSymptoms = a.Symptoms,
@@ -149,7 +151,7 @@ namespace PulseCare.Controllers
             return View();
         }
 
-        // 🔑 NEW: GET: Consultation/GetConsultationDetails/{id} - Secure background context node validation endpoint
+        // GET: Consultation/GetConsultationDetails/{id} - Secure background context node validation endpoint
         [HttpGet]
         public IActionResult GetConsultationDetails(int id)
         {
@@ -160,10 +162,31 @@ namespace PulseCare.Controllers
             if (appointment == null)
                 return Json(new { success = false, message = "Target chart entry record not found." });
 
-            // Pull matching historical care plans logged in the tracking grid safely
             var reminder = _context.Reminders
-                                   .Where(r => r.PatientId == appointment.PatientId && r.ReminderDate.Date == appointment.AppointmentDate.Date)
-                                   .FirstOrDefault();
+                                   .FirstOrDefault(r => r.PatientId == appointment.PatientId && r.Message.Contains($"[AppRef:#{id}]"));
+
+            if (reminder == null)
+            {
+                var completedApps = _context.Appointments
+                                            .Where(a => a.PatientId == appointment.PatientId && a.Status == "Completed")
+                                            .OrderBy(a => a.AppointmentDate)
+                                            .ToList();
+                int appIndex = completedApps.FindIndex(a => a.Id == appointment.Id);
+
+                var patientReminders = _context.Reminders
+                                               .Where(r => r.PatientId == appointment.PatientId && r.Message.Contains("Prescription Plan Logged:"))
+                                               .OrderBy(r => r.ReminderDate)
+                                               .ToList();
+
+                if (appIndex >= 0 && appIndex < patientReminders.Count)
+                {
+                    reminder = patientReminders[appIndex];
+                }
+                else if (patientReminders.Any())
+                {
+                    reminder = patientReminders.LastOrDefault();
+                }
+            }
 
             string clinicalNotes = "No clinical summary notes filed for this session.";
             string prescriptions = "No active medical tracks assigned.";
@@ -171,6 +194,12 @@ namespace PulseCare.Controllers
             if (reminder != null && !string.IsNullOrEmpty(reminder.Message))
             {
                 string rawMsg = reminder.Message;
+
+                if (rawMsg.Contains($"[AppRef:#{id}]"))
+                {
+                    rawMsg = rawMsg.Replace($"[AppRef:#{id}]", "").Trim();
+                }
+
                 if (rawMsg.Contains("Notes:"))
                 {
                     int notesIndex = rawMsg.IndexOf("Notes:");
@@ -179,11 +208,10 @@ namespace PulseCare.Controllers
                 }
                 else
                 {
-                    prescriptions = rawMsg;
+                    prescriptions = rawMsg.Replace("Prescription Plan Logged:", "").Trim();
                 }
             }
 
-            // Clean symptom strings of triage references before pushing payload to frontend
             string diagnosticSymptoms = appointment.Symptoms ?? "";
             if (diagnosticSymptoms.Contains("]"))
             {
@@ -240,7 +268,7 @@ namespace PulseCare.Controllers
                 var careReminderNode = new Reminder
                 {
                     PatientId = patientId,
-                    Message = $"Prescription Plan Logged: {prescriptions}. Notes: {clinicalNotes}",
+                    Message = $"[AppRef:#{consultationId}] Prescription Plan Logged: {prescriptions}. Notes: {clinicalNotes}",
                     ReminderDate = DateTime.Now,
                     IsCompleted = false
                 };
