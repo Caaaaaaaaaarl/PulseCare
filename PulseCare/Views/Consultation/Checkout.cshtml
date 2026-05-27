@@ -1,54 +1,130 @@
 ﻿@model PulseCare.Models.Appointment
 @{
-    ViewData["Title"] = "Session Checkout";
+    ViewData["Title"] = "Clinical Checkout";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow border-success">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">Finalize Consultation: @ViewBag.PatientName</h4>
+<div style="height: 6px; background-color: #10b981; margin: -1rem -1rem 1.5rem -1rem; border-radius: 4px 4px 0 0;"></div>
+
+<div class="container-fluid max-width-md pb-5">
+
+    <div class="pc-page-header mb-4">
+        <h3 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.4px;">Consultation Session Checkout</h3>
+        <p class="small mb-0" style="color: var(--pc-text-muted);">Finalize clinical records, diagnose symptoms, prescribe medical plans, and process session parameters.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm bg-white" style="border-radius: var(--pc-radius, 8px);">
+        <div class="card-body p-4 p-md-5">
+
+            <form id="checkoutForm" method="post" action="/Consultation/CompleteConsultation">
+
+                <input type="hidden" name="consultationId" value="@Model.Id" />
+                <input type="hidden" name="patientId" value="@Model.PatientId" />
+
+                <div class="mb-4 p-3 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <span class="text-uppercase font-monospace fw-bold text-secondary d-block mb-1.5" style="font-size: 0.725rem; letter-spacing: 0.05em;">Patient-Reported Case Symptoms:</span>
+                    <p class="mb-0 text-dark fw-semibold" style="font-size: 0.925rem;">@Model.Symptoms</p>
                 </div>
-                <div class="card-body">
 
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger">@ViewBag.Error</div>
-                    }
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark small mb-1">Doctor's Clinical Notes</label>
+                    <textarea name="clinicalNotes" class="form-control" rows="4" required
+                              placeholder="Enter diagnostic outcomes and session summary findings..."
+                              style="border-color: #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical;"></textarea>
+                </div>
 
-                    <div class="alert alert-secondary">
-                        <strong>Patient's Symptoms:</strong> <br />
-                        @Model.Symptoms
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-1">
+                        <label class="form-label fw-semibold text-dark small mb-0">Diet Plan & Prescriptions</label>
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2.5 py-1 small ms-2"
+                              style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.01em;">Core Health Tracker</span>
                     </div>
+                    <textarea name="prescriptions" class="form-control" rows="4" required
+                              placeholder="e.g. Low sodium diet, 30 mins cardio daily, Metformin 500mg..."
+                              style="border-color: #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical;"></textarea>
 
-                    <form method="post" asp-action="Checkout" asp-controller="Consultation">
-                        <input type="hidden" name="appointmentId" value="@Model.Id" />
-                        <input type="hidden" name="patientId" value="@Model.PatientId" />
+                    <p class="text-muted small mt-1.5 mb-0" style="font-size: 0.775rem; opacity: 0.9;">
+                        💡 Submitting automatically commits metrics directly onto the patient's daily reminder tracking screen.
+                    </p>
+                </div>
 
-                        <div class="mb-3">
-                            <label class="fw-bold">Doctor's Clinical Notes</label>
-                            <textarea name="notes" class="form-control" rows="3" required placeholder="Diagnosis and session summary..."></textarea>
-                        </div>
+                <hr class="my-4" style="border-color: #e2e8f0;" />
 
-                        <div class="mb-3">
-                            <label class="fw-bold">Diet Plan & Prescriptions (SDG 3)</label>
-                            <textarea name="prescription" class="form-control" rows="3" required placeholder="e.g. Low sodium diet, 30 mins cardio daily, Metformin 500mg..."></textarea>
-                            <small class="text-muted">Submitting this will automatically generate health reminders on the patient's dashboard.</small>
-                        </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-secondary small mb-1">Schedule Next Appointment (Optional)</label>
+                    <div class="position-relative">
+                        <input type="datetime-local" id="nextAppointmentDate" name="nextAppointmentDate" class="form-control"
+                               style="border-color: #cbd5e1; border-radius: 6px; font-size: 0.9rem; max-width: 360px;" />
+                    </div>
+                    <p class="text-muted small mt-1 mb-0" style="font-size: 0.75rem; opacity: 0.85;">
+                        💡 Specifying a follow-up target automatically commits a new pending slot onto the patient's appointment ledger tracker.
+                    </p>
+                </div>
 
-                        <div class="mb-3">
-                            <label class="fw-bold">Consultation Fee ($)</label>
-                            <input type="number" step="0.01" name="fee" class="form-control" required value="50.00" />
-                        </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark small mb-1">Consultation Session Fee (₱)</label>
+                    <div class="input-group" style="max-width: 360px;">
+                        <span class="input-group-text font-monospace bg-light border-end-0 text-muted"
+                              style="border-color: #cbd5e1; border-radius: 6px 0 0 6px; font-weight: 500;">₱</span>
+                        <input type="number" name="fee" class="form-control font-monospace text-dark fw-medium"
+                               step="0.01" value="500.00" required
+                               style="border-color: #cbd5e1; border-radius: 0 6px 6px 0; font-size: 0.95rem; padding-left: 12px;" />
+                    </div>
+                </div>
 
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="/Consultation/Queue" class="btn btn-outline-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-success fw-bold">Sign Ledger & Complete Session</button>
-                        </div>
-                    </form>
+                <div class="d-flex align-items-center justify-content-between pt-3 mt-4" style="border-top: 1px solid #f1f5f9;">
+                    <a href="/Consultation/Queue" class="btn btn-light border fw-medium px-4 py-2" style="font-size: 0.9rem; color: #475569;">
+                        Cancel
+                    </a>
+                    <button type="button" id="openConfirmModalBtn" class="btn btn-primary fw-medium px-4 py-2" style="font-size: 0.9rem; background-color: #0284c7; border-color: #0284c7;">
+                        Submit Request & Complete
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="checkoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3" style="color: #10b981;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                    </svg>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Finalize Records</h5>
+                <p class="small text-muted mb-4">Are you sure you want to complete this consultation? This will commit clinical diagnostics and redirect to the patient queue track window.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-light border small px-3.5" data-bs-dismiss="modal">Review Notes</button>
+                    <button type="button" id="executeSubmitBtn" class="btn btn-success small px-4 fw-semibold text-white" style="background-color: #10b981; border-color: #10b981; color: #ffffff !important;">Confirm & Submit</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Intercept submission request button to strictly validate mandatory inputs before allowing popup entry
+            $('#openConfirmModalBtn').on('click', function () {
+                var formElement = $('#checkoutForm');
+
+                if (formElement[0].checkValidity()) {
+                    $('#checkoutConfirmModal').modal('show');
+                } else {
+                    formElement[0].reportValidity();
+                }
+            });
+
+            // Handle actual processing submit post lifecycle when modal is confirmed
+            $('#executeSubmitBtn').on('click', function () {
+                $('#checkoutForm').submit();
+            });
+        });
+    </script>
+}

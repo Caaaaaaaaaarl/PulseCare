@@ -64,6 +64,7 @@ namespace PulseCare.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ConsultationFee")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -152,6 +153,14 @@ namespace PulseCare.Migrations
                             FullName = "Adrian Kim",
                             Password = "123",
                             Role = "Patient"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "admin@pulsecare.com",
+                            FullName = "System Admin",
+                            Password = "123",
+                            Role = "Admin"
                         });
                 });
 #pragma warning restore 612, 618

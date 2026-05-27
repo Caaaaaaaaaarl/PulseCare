@@ -19,7 +19,9 @@ namespace PulseCare.Data
             // Seed mock accounts so you don't have to manually register them
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, FullName = "Dr. Smith", Role = "Doctor", Email = "doctor@pulsecare.com", Password = "123" },
-                new User { Id = 2, FullName = "Adrian Kim", Role = "Patient", Email = "patient@pulsecare.com", Password = "123" }
+                new User { Id = 2, FullName = "Adrian Kim", Role = "Patient", Email = "patient@pulsecare.com", Password = "123" },
+                // 🔑 FIX: Added mock Administrator credentials row to populate the localized SQL database table
+                new User { Id = 3, FullName = "System Admin", Role = "Admin", Email = "admin@pulsecare.com", Password = "123" }
             );
         }
     }

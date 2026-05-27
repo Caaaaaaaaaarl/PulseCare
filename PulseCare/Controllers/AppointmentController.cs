@@ -27,7 +27,34 @@ namespace PulseCare.Controllers
             ViewBag.Doctors = _context.Users.Where(u => u.Role == "Doctor").ToList();
             return View();
         }
+        // Inside Controllers/AppointmentController.cs
 
+        [HttpGet]
+        public IActionResult MyAppointments()
+        {
+            // Ensure only authorized patients can access this data ledger route
+            if (HttpContext.Session.GetString("UserRole") != "Patient")
+                return RedirectToAction("Login", "Account");
+
+            int patientId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            // 🔑 Query personal appointments database history and join with doctor names cleanly
+            var appointmentsList = (from a in _context.Appointments
+                                    join u in _context.Users on a.DoctorId equals u.Id
+                                    where a.PatientId == patientId
+                                    orderby a.AppointmentDate descending
+                                    select new
+                                    {
+                                        a.Id,
+                                        DoctorName = u.FullName,
+                                        a.AppointmentDate,
+                                        a.Symptoms,
+                                        a.Status
+                                    }).ToList();
+
+            ViewBag.Appointments = appointmentsList;
+            return View();
+        }
         [HttpPost]
         public IActionResult Book(int doctorId, DateTime appointmentDate, string symptoms)
         {

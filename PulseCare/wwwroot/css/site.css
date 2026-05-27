@@ -1,31 +1,703 @@
+/* =========================================
+   PulseCare — Design System
+   Clinical flat design, stable interactions
+   ========================================= */
+
+:root {
+    /* Page & surface */
+    --pc-bg: #f1f5f9;
+    --pc-surface: #ffffff;
+    --pc-surface-raised: #f8fafc;
+    /* Clinical blue family */
+    --pc-primary: #0369a1;
+    --pc-primary-hover: #075985;
+    --pc-primary-subtle: #e0f2fe;
+    --pc-primary-muted: #7dd3fc;
+    /* Status */
+    --pc-success: #059669;
+    --pc-success-subtle: #d1fae5;
+    --pc-info: #0891b2;
+    --pc-info-subtle: #cffafe;
+    --pc-warning: #d97706;
+    --pc-warning-subtle: #fef3c7;
+    --pc-danger: #dc2626;
+    --pc-danger-subtle: #fee2e2;
+    /* Typography */
+    --pc-text: #1e293b;
+    --pc-text-muted: #64748b;
+    --pc-text-subtle: #94a3b8;
+    /* Borders */
+    --pc-border: #e2e8f0;
+    --pc-border-strong: #cbd5e1;
+    /* Radius */
+    --pc-radius-sm: 8px;
+    --pc-radius: 12px;
+    --pc-radius-lg: 16px;
+    /* Shadows — flat, crisp, grounded */
+    --pc-shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --pc-shadow-hover: 0 4px 12px rgba(15, 23, 42, 0.09), 0 2px 4px rgba(15, 23, 42, 0.05);
+    --pc-shadow-input: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+    /* Sidebar */
+    --pc-sidebar-width: 248px;
+    /* Legacy aliases kept for compatibility */
+    --pc-card-shadow: var(--pc-shadow-card);
+    --pc-input-shadow: var(--pc-shadow-input);
+}
+
+/* ── Base ─────────────────────────────────────── */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--pc-bg);
+    color: var(--pc-text);
+    margin-bottom: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* ── Safe Transitions
+   Explicitly enumerate only safe properties.
+   No transform, no width/height/margin/top/left — prevents
+   any layout shift or movement on interactive elements.
+   ──────────────────────────────────────────────────────── */
+.card,
+.btn,
+.form-control,
+.form-select,
+.nav-link,
+.pc-sidebar-link {
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* ── Dashboard Shell ─────────────────────────── */
+.pc-layout {
+    display: flex;
+    min-height: 100vh;
 }
+
+/* ── Sidebar ─────────────────────────────────── */
+.pc-sidebar {
+    width: var(--pc-sidebar-width);
+    flex-shrink: 0;
+    background: var(--pc-surface);
+    border-right: 1px solid var(--pc-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 200;
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
+}
+
+.pc-sidebar-brand {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--pc-border);
+    margin-bottom: 1.25rem;
+}
+
+.pc-brand {
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.4px;
+    color: var(--pc-primary) !important;
+    text-decoration: none !important;
+}
+
+.pc-sidebar-subtitle {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pc-text-subtle);
+    margin-top: 0.375rem;
+    padding-left: 0.125rem;
+}
+
+/* Sidebar navigation links — no jump, no translate */
+.pc-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--pc-radius-sm);
+    color: var(--pc-text-muted);
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+}
+
+    .pc-sidebar-link:hover {
+        background-color: var(--pc-primary-subtle);
+        color: var(--pc-primary);
+    }
+
+    .pc-sidebar-link.active {
+        background-color: var(--pc-primary-subtle);
+        color: var(--pc-primary);
+        font-weight: 600;
+    }
+
+.pc-sidebar-link-danger:hover {
+    background-color: var(--pc-danger-subtle);
+    color: var(--pc-danger);
+}
+
+.pc-sidebar-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    width: 1.25rem;
+    text-align: center;
+    display: inline-block;
+}
+
+/* User chip at sidebar bottom */
+.pc-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem 0.75rem;
+}
+
+.pc-sidebar-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--pc-primary-subtle);
+    border: 1px solid var(--pc-border);
+    color: var(--pc-primary);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ── Content Area ────────────────────────────── */
+.pc-content-area {
+    flex: 1;
+    min-height: 100vh;
+    margin-left: var(--pc-sidebar-width);
+    background: var(--pc-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 2.25rem 2.75rem;
+}
+
+/* Full-width layout (Login, unauthenticated pages) */
+.pc-full-content {
+    flex: 1;
+    min-height: 100vh;
+    background: var(--pc-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Mobile header (≤ 767px only) ──────────── */
+.pc-mobile-header {
+    background: var(--pc-surface);
+    border-bottom: 1px solid var(--pc-border);
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .pc-sidebar {
+        display: none;
+    }
+
+        .pc-sidebar.is-open {
+            display: flex;
+            box-shadow: 4px 0 20px rgba(15, 23, 42, 0.1);
+        }
+
+    .pc-content-area {
+        margin-left: 0;
+        padding: 1.5rem 1.25rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .pc-mobile-header {
+        display: none !important;
+    }
+}
+
+/* ── Cards ───────────────────────────────────── */
+.card {
+    border: 1px solid var(--pc-border) !important;
+    border-radius: var(--pc-radius-lg) !important;
+    background: var(--pc-surface);
+    box-shadow: var(--pc-shadow-card);
+}
+
+.card-header {
+    background: var(--pc-surface) !important;
+    border-bottom: 1px solid var(--pc-border) !important;
+    padding: 1.125rem 1.5rem !important;
+    border-radius: var(--pc-radius-lg) var(--pc-radius-lg) 0 0 !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-footer {
+    background: var(--pc-surface-raised) !important;
+    border-top: 1px solid var(--pc-border) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+/* Interactive card hover — shadow deepens, border strengthens.
+   NO transform. NO translateY. The card stays perfectly still. */
+.card.interactive-card:hover {
+    box-shadow: var(--pc-shadow-hover) !important;
+    border-color: var(--pc-border-strong) !important;
+    background-color: var(--pc-surface-raised) !important;
+}
+
+/* ── Forms ───────────────────────────────────── */
+.form-control,
+.form-select {
+    border: 1px solid var(--pc-border-strong);
+    border-radius: var(--pc-radius-sm);
+    padding: 0.625rem 1rem;
+    background-color: var(--pc-surface);
+    color: var(--pc-text);
+    box-shadow: var(--pc-shadow-input);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+    .form-control:hover,
+    .form-select:hover {
+        border-color: #a0b4c8;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--pc-primary);
+        background-color: var(--pc-surface);
+        box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.12) !important;
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: var(--pc-text-subtle);
+        font-size: 0.9375rem;
+    }
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--pc-text-muted);
+    margin-bottom: 0.375rem;
+    letter-spacing: 0.01em;
+}
+
+.form-text {
+    color: var(--pc-text-subtle);
+    font-size: 0.8125rem;
+}
+
+/* ── Buttons ─────────────────────────────────── */
+.btn {
+    border-radius: var(--pc-radius-sm);
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    border-width: 1px;
+}
+
+.btn-primary {
+    background-color: var(--pc-primary);
+    border-color: var(--pc-primary);
+    color: #ffffff;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+        background-color: var(--pc-primary-hover);
+        border-color: var(--pc-primary-hover);
+        color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.18);
+    }
+
+.btn-outline-primary {
+    border-color: var(--pc-primary);
+    color: var(--pc-primary);
+    background-color: transparent;
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--pc-primary-subtle);
+        border-color: var(--pc-primary);
+        color: var(--pc-primary-hover);
+    }
+
+.btn-success {
+    background-color: var(--pc-success);
+    border-color: var(--pc-success);
+    color: #ffffff;
+}
+
+    .btn-success:hover {
+        background-color: #047857;
+        border-color: #047857;
+        color: #ffffff;
+    }
+
+.btn-info {
+    background-color: var(--pc-info);
+    border-color: var(--pc-info);
+    color: #ffffff;
+}
+
+    .btn-info:hover {
+        background-color: #0e7490;
+        border-color: #0e7490;
+        color: #ffffff;
+    }
+
+.btn-outline-danger:hover {
+    background-color: var(--pc-danger-subtle);
+    border-color: var(--pc-danger);
+    color: var(--pc-danger);
+}
+
+/* ── Page header ─────────────────────────────── */
+.pc-page-header {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--pc-border);
+    margin-bottom: 2rem;
+}
+
+/* ── Footer — inline, not absolutely positioned ── */
+.footer {
+    position: static;
+    width: 100%;
+    padding: 1rem 0;
+    margin-top: auto;
+    background: var(--pc-surface);
+    border-top: 1px solid var(--pc-border) !important;
+    color: var(--pc-text-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+    .footer a {
+        color: var(--pc-primary);
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: var(--pc-primary-hover);
+            text-decoration: underline;
+        }
+
+/* ── Utility overrides ───────────────────────── */
+.text-primary {
+    color: var(--pc-primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--pc-primary) !important;
+}
+
+.border-primary {
+    border-color: var(--pc-primary) !important;
+}
+
+/* ===========================================
+   PulseCare — Extended Component Library
+   =========================================== */
+
+/* ── Progress bars (Doctor Dashboard) ───────── */
+.flat-progress-bar {
+    height: 4px;
+    background-color: var(--pc-border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 0.625rem;
+}
+
+.flat-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background-color: var(--pc-primary);
+}
+
+/* ── Design-system badges ────────────────────── */
+.pc-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.625rem;
+    border-radius: 20px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+}
+
+.pc-badge-primary {
+    background: var(--pc-primary-subtle);
+    color: var(--pc-primary);
+    border: 1px solid var(--pc-primary-muted);
+}
+
+.pc-badge-success {
+    background: var(--pc-success-subtle);
+    color: var(--pc-success);
+    border: 1px solid #6ee7b7;
+}
+
+.pc-badge-info {
+    background: var(--pc-info-subtle);
+    color: var(--pc-info);
+    border: 1px solid #a5f3fc;
+}
+
+.pc-badge-warning {
+    background: var(--pc-warning-subtle);
+    color: var(--pc-warning);
+    border: 1px solid #fcd34d;
+}
+
+.pc-badge-neutral {
+    background: var(--pc-surface-raised);
+    color: var(--pc-text-subtle);
+    border: 1px solid var(--pc-border);
+}
+
+/* ── Stat cards (Doctor Dashboard) ──────────── */
+.pc-stat-card {
+    background: var(--pc-surface);
+    padding: 1rem 1.125rem;
+}
+
+.pc-stat-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pc-text-subtle);
+    margin-bottom: 0.375rem;
+}
+
+.pc-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--pc-text);
+}
+
+.pc-stat-value-danger {
+    color: var(--pc-danger) !important;
+}
+
+.pc-stat-sub {
+    font-size: 0.8125rem;
+    color: var(--pc-text-muted);
+}
+
+/* ── Timeline entries (Doctor Dashboard) ────── */
+.pc-timeline-entry {
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--pc-radius-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+    .pc-timeline-entry.entry-archived {
+        background-color: var(--pc-surface-raised);
+        border-left: 3px solid var(--pc-success);
+        color: var(--pc-text-muted);
+    }
+
+    .pc-timeline-entry.entry-pending {
+        background-color: var(--pc-warning-subtle);
+        border-left: 3px solid var(--pc-warning);
+        color: var(--pc-text-muted);
+    }
+
+    .pc-timeline-entry.entry-next {
+        background-color: var(--pc-surface);
+        border: 1px solid var(--pc-border);
+        border-left: 3px solid var(--pc-primary) !important;
+        box-shadow: var(--pc-shadow-card);
+        color: var(--pc-text);
+    }
+
+/* ── Table system (Queue) ────────────────────── */
+.pc-table {
+    margin-bottom: 0;
+}
+
+    .pc-table thead th {
+        background-color: var(--pc-surface-raised) !important;
+        color: var(--pc-text-subtle);
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.875rem 1.25rem !important;
+        border-bottom: 1px solid var(--pc-border) !important;
+        border-top: none !important;
+    }
+
+    .pc-table tbody td {
+        padding: 0.875rem 1.25rem !important;
+        border-bottom: 1px solid var(--pc-border) !important;
+        color: var(--pc-text);
+        font-size: 0.9375rem;
+        vertical-align: middle;
+    }
+
+    .pc-table tbody tr:last-child td {
+        border-bottom: none !important;
+    }
+
+    .pc-table tbody tr:hover td {
+        background-color: var(--pc-surface-raised);
+    }
+
+/* ── Callout block (Privacy, info pages) ─────── */
+.pc-callout {
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--pc-primary);
+    border-radius: 0 var(--pc-radius-sm) var(--pc-radius-sm) 0;
+    background-color: var(--pc-primary-subtle);
+}
+
+/* ── Data chip (Privacy feature list) ────────── */
+.pc-data-chip {
+    display: block;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--pc-radius-sm);
+    border: 1px solid var(--pc-border);
+    background: var(--pc-surface-raised);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--pc-text);
+}
+
+/* ── Card left-accent variants ───────────────── */
+.pc-card-accent-primary {
+    border-left: 3px solid var(--pc-primary) !important;
+}
+
+.pc-card-accent-success {
+    border-left: 3px solid var(--pc-success) !important;
+}
+
+.pc-card-accent-info {
+    border-left: 3px solid var(--pc-info) !important;
+}
+
+/* ── Solid colored card headers ──────────────── */
+.pc-card-header-primary {
+    background-color: var(--pc-primary) !important;
+    border-bottom: none !important;
+    color: #ffffff;
+}
+
+.pc-card-header-success {
+    background-color: var(--pc-success) !important;
+    border-bottom: none !important;
+    color: #ffffff;
+}
+
+.pc-card-header-dark {
+    background-color: var(--pc-text) !important;
+    border-bottom: none !important;
+    color: #ffffff;
+}
+.pc-layout {
+    min-height: 100vh;        /* layout row always fills the viewport */
+    align-items: stretch;     /* sidebar & content column both stretch */
+}
+ 
+.pc-sidebar {
+    min-height: 100vh;        /* sidebar column always full-height     */
+    align-self: stretch;      /* redundant safety — keeps it consistent */
+}
+ 
+/* ── Fix 2b: Full-width footer ──────────────────────────────
+   The footer is now rendered outside .pc-layout, so it sits
+   below both the sidebar and the content area naturally.
+   Give it a consistent white background with a top border.   */
+.pc-footer-full {
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid var(--pc-border, #e5e7eb);
+    padding: 0.875rem 0;
+    margin-top: 0;            /* no gap between layout and footer       */
+}
+ 
+/* ── Fix 4: Anonymous user chip (no UserName set) ───────────
+   When a sub-page controller doesn't pass ViewBag.UserName,
+   the chip renders with reduced opacity so it's visually
+   distinct but doesn't collapse or break the sidebar layout.  */
+.pc-sidebar-user-anonymous {
+    opacity: 0.55;
+}
+.pc-sidebar-user-anonymous .pc-sidebar-avatar {
+    background: var(--pc-border, #e5e7eb);
+    color: var(--pc-text-muted, #6b7280);
+}
+
+.pc-layout {
+    min-height: 100vh; /* layout row always fills the viewport */
+    align-items: stretch; /* sidebar & content column both stretch */
+}
+
+.pc-sidebar {
+    min-height: 100vh; /* sidebar column always full-height     */
+    align-self: stretch; /* redundant safety — keeps it consistent */
+}
+
+/* ── Fix 2b: Full-width footer ──────────────────────────────
+   The footer is now rendered outside .pc-layout, so it sits
+   below both the sidebar and the content area naturally.
+   Give it a consistent white background with a top border.   */
+.pc-footer-full {
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid var(--pc-border, #e5e7eb);
+    padding: 0.875rem 0;
+    margin-top: 0; /* no gap between layout and footer       */
+}
+
+/* ── Fix 4: Anonymous user chip (no UserName set) ───────────
+   When a sub-page controller doesn't pass ViewBag.UserName,
+   the chip renders with reduced opacity so it's visually
+   distinct but doesn't collapse or break the sidebar layout.  */
+.pc-sidebar-user-anonymous {
+    opacity: 0.55;
+}
+
+    .pc-sidebar-user-anonymous .pc-sidebar-avatar {
+        background: var(--pc-border, #e5e7eb);
+        color: var(--pc-text-muted, #6b7280);
+    }
+ 

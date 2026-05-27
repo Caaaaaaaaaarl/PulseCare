@@ -1,6 +1,85 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container-fluid max-width-md pb-5">
+
+    <div class="pc-page-header mb-4 text-center">
+        <h2 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.5px;">Privacy Policy</h2>
+        <p class="small mb-0 text-muted">PulseCare Patient Confidentiality & Medical Telemetry Data Architecture Standards</p>
+    </div>
+
+    <div class="card border-0 shadow-sm bg-white" style="border-radius: var(--pc-radius, 8px);">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="p-3 rounded mb-4" style="background-color: #e0f2fe; border-left: 4px solid #0284c7;">
+                <h6 class="fw-bold text-dark mb-1">Patient-Physician Data Protection Clause</h6>
+                <p class="mb-0 text-secondary small" style="line-height: 1.5;">
+                    PulseCare operates under strict alignment with institutional healthcare data protection mandates and national medical privacy frameworks. Your health data, triage entries, and session details are processed exclusively within secure sandboxed endpoints.
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem; letter-spacing: -0.2px;">1. Scope of Telemetry & Biometric Data Collection</h5>
+                <p class="text-muted small mb-3" style="line-height: 1.5;">
+                    To provide stable real-time clinical dashboards and automated queue priority tiers, PulseCare records the following datasets during platform interaction:
+                </p>
+
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <div class="p-2.5 rounded border bg-light d-flex align-items-center gap-2" style="border-color: #e2e8f0 !important;">
+                            <span style="font-size: 1rem;">🧬</span>
+                            <span class="small fw-semibold text-dark">Smart Triage Symptom Profiles</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2.5 rounded border bg-light d-flex align-items-center gap-2" style="border-color: #e2e8f0 !important;">
+                            <span style="font-size: 1rem;">📊</span>
+                            <span class="small fw-semibold text-dark">Core Vital Metrics Tracking Logs</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2.5 rounded border bg-light d-flex align-items-center gap-2" style="border-color: #e2e8f0 !important;">
+                            <span style="font-size: 1rem;">📋</span>
+                            <span class="small fw-semibold text-dark">Doctor Consultation & Clinical Notes</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-2.5 rounded border bg-light d-flex align-items-center gap-2" style="border-color: #e2e8f0 !important;">
+                            <span style="font-size: 1rem;">🥗</span>
+                            <span class="small fw-semibold text-dark">Chronic Care Diet & Prescriptions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color: #f1f5f9;" />
+
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem; letter-spacing: -0.2px;">2. Restricted Ledger Access & Confidentiality</h5>
+                <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                    Medical summaries and session clinical notes compiled by attending physicians during consultation checkout are securely locked down. Access to these dashboards is strictly regulated through isolated cryptographic authentication tokens. Your designated physician can analyze your health plan metrics, but records remain completely confidential and are never shared with external unverified actors.
+                </p>
+            </div>
+
+            <hr class="my-4" style="border-color: #f1f5f9;" />
+
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem; letter-spacing: -0.2px;">3. Automatic Reminder Metric Synchronization</h5>
+                <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                    To support proactive patient health monitoring and clinical wellness management, prescription intervals and dietary restrictions are synchronized in real-time across your dashboard. This transaction processing model logs time stamps locally to monitor compliance thresholds without transmitting unencrypted diagnostics across public communication nodes.
+                </p>
+            </div>
+
+            <hr class="my-4" style="border-color: #f1f5f9;" />
+
+            <div class="mb-0">
+                <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem; letter-spacing: -0.2px;">4. Terminal Session Purging</h5>
+                <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                    Patients maintain absolute authority over active telemetry tracking vectors. When terminating a portal session using the secure <strong class="text-dark">Log Out</strong> protocol button, all local memory states, server caching layers, and active verification variables are immediately cleared from the web runtime environment to prevent system identity hijacking.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

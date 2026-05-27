@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PulseCare.Data;
+using PulseCare.Models;
+using System;
 using System.Linq;
 
 namespace PulseCare.Controllers
@@ -14,37 +16,44 @@ namespace PulseCare.Controllers
             _context = context;
         }
 
+        private bool IsPatient() => HttpContext.Session.GetString("UserRole") == "Patient";
+
+        // GET: Reminder/Index - Streams active treatment tasks onto the user view panel
         [HttpGet]
         public IActionResult Index()
         {
-            // Block access if not a Patient
-            if (HttpContext.Session.GetString("UserRole") != "Patient")
-                return RedirectToAction("Login", "Account");
+            if (!IsPatient()) return RedirectToAction("Login", "Account");
 
-            int patientId = int.Parse(HttpContext.Session.GetString("UserId"));
+            string userIdStr = HttpContext.Session.GetString("UserId") ?? "0";
+            int patientId = int.Parse(userIdStr);
 
-            // Fetch all reminders for this patient, sort uncompleted ones first
+            // Pull active, incomplete prescription tasks ordered by date sequence
             var reminders = _context.Reminders
-                                    .Where(r => r.PatientId == patientId)
-                                    .OrderBy(r => r.IsCompleted)
-                                    .ThenBy(r => r.ReminderDate)
+                                    .Where(r => r.PatientId == patientId && !r.IsCompleted)
+                                    .OrderBy(r => r.ReminderDate)
                                     .ToList();
 
             return View(reminders);
         }
 
+        // POST: Reminder/MarkComplete/{id} - Implements a background endpoint to process completed care items
         [HttpPost]
         public IActionResult MarkComplete(int id)
         {
-            // Find the reminder and mark it as done
-            var reminder = _context.Reminders.Find(id);
-            if (reminder != null)
-            {
-                reminder.IsCompleted = true;
-                _context.SaveChanges();
-            }
+            // Return JSON validation blocks to satisfy background asynchronous requests cleanly
+            if (!IsPatient())
+                return Json(new { success = false, message = "Session context unauthorized." });
 
-            return RedirectToAction("Index");
+            var reminderRecord = _context.Reminders.Find(id);
+            if (reminderRecord == null)
+                return Json(new { success = false, message = "Target tracking row resource not found." });
+
+            // Update state parameter and commit to database storage
+            reminderRecord.IsCompleted = true;
+            _context.SaveChanges();
+
+            // Return a clear, lightweight completion payload signature back to the browser script
+            return Json(new { success = true });
         }
     }
 }

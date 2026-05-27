@@ -2,22 +2,127 @@
     ViewData["Title"] = "Doctor Dashboard";
 }
 
-<h2>Welcome, @ViewBag.UserName</h2>
-<p class="text-muted">Physician Portal</p>
-<hr />
+<div class="pc-page-header mb-4">
+    <h2 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.5px;">Welcome back, @ViewBag.UserName</h2>
+    <p class="mb-0 d-flex align-items-center gap-2" style="color: var(--pc-text-muted); font-size: 0.9rem;">
+        <span class="badge px-2.5 py-1 text-primary rounded-pill font-monospace" style="background-color: #e0f2fe; font-size: 0.75rem; font-weight: 600;">Physician Portal Active</span>
+        <span>Clinical Node Verification Verified</span>
+    </p>
+</div>
 
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card bg-primary text-white shadow">
-            <div class="card-body">
-                <h5 class="card-title">Appointments</h5>
-                <p class="card-text">View patient triage data and start virtual consultations.</p>
-                <a href="/Consultation/Queue" class="btn btn-light text-primary">View Queue</a>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Patients in Queue</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">@ViewBag.QueueCount</span>
+                <span class="pc-stat-sub text-muted small ms-1">Awaiting Triage</span>
             </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: 25%; background-color: #0284c7 !important;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Critical Alerts</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold fs-2" style="color: #ef4444;">@ViewBag.CriticalAlerts</span>
+                <span class="pc-stat-sub text-muted small ms-1">Urgent Blocks</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #e6f4ea; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100 w-100" style="background-color: #10b981 !important;"></div>
+            </div>
+            <div class="mt-1 text-success font-monospace" style="font-size: 0.7rem; font-weight: 500;">Queue Safe</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Charts Compiled Today</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">@ViewBag.ChartsCompiled</span>
+                <span class="pc-stat-sub text-muted small ms-1">Ledgers Signed</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: 80%; background-color: #cbd5e1 !important;"></div>
+            </div>
+            <div class="mt-1 text-muted font-monospace" style="font-size: 0.7rem;">Shift Goal: 15</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Avg Session Duration</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">14.2</span>
+                <span class="pc-stat-sub text-muted small ms-1">Minutes</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: 100%; background-color: #e0f2fe !important;"></div>
+            </div>
+            <div class="mt-1 text-primary font-monospace" style="font-size: 0.7rem; font-weight: 500;">Optimal Pace</div>
         </div>
     </div>
 </div>
 
-<div class="mt-5">
-    <a href="/Account/Logout" class="btn btn-outline-danger">Log Out</a>
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-4">
+        <div class="card border border-light shadow-sm h-100 text-center p-4 bg-white" style="border-radius: 8px;">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-3" style="width: 56px; height: 56px;">
+                <span class="fs-3">👥</span>
+            </div>
+            <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">Appointments Queue</h5>
+            <p class="small text-muted mb-4" style="line-height: 1.5;">
+                Monitor incoming active clinical case structures, view triage summary histories, and process pending patient lists securely.
+            </p>
+            <div class="mt-auto">
+                <a href="/Consultation/Queue" class="btn btn-primary w-100 fw-medium py-2.5" style="background-color: #0284c7; border-color: #0284c7; font-size: 0.9rem;">
+                    View Queue
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border border-light shadow-sm h-100 bg-white" style="border-radius: 8px;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">Today's Clinic Shift Timeline Logs</h6>
+                    <span class="font-monospace text-muted" style="font-size: 0.725rem; letter-spacing: 0.05em;">LIVE CADENCE MONITOR</span>
+                </div>
+
+                <div class="d-flex flex-column gap-1">
+                    @if (ViewBag.ShiftLogs.Count == 0)
+                    {
+                        <div class="py-4 text-center text-muted small">No scheduled slots or triage queues registered under your staff profile layout.</div>
+                    }
+                    else
+                    {
+                        @foreach (var log in ViewBag.ShiftLogs)
+                        {
+                            <div class="py-2.5 d-flex align-items-center justify-content-between border-bottom" style="border-color: #f1f5f9 !important;">
+                                <div class="small text-secondary">
+                                    <strong class="text-dark font-monospace me-2" style="font-weight: 600;">@log.LogTime</strong> — Case Consultation: @log.PatientLabel
+                                </div>
+                                @if (log.StatusText == "Next Case")
+                                {
+                                    <a href="/Consultation/Queue" class="btn btn-sm btn-outline-primary font-monospace fw-semibold" style="font-size: 0.725rem; padding: 3px 10px; border-radius: 4px;">Next Case</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-white border text-secondary font-monospace" style="font-size: 0.725rem; padding: 4px 8px; color: #64748b !important;">@log.StatusText</span>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="text-muted text-start mt-4" style="font-size: 0.75rem; letter-spacing: 0.02em; opacity: 0.7;">
+    PHYSICIAN WORKSPACE ACTIVE SECURITY NODE ID: <span class="font-monospace fw-bold text-primary">#PC-DOC-CORE</span>
 </div>
