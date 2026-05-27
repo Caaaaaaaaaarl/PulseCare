@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    ViewData["HideSidebar"] = true;
+}
+
+<div class="d-flex flex-column align-items-center justify-content-center py-5" style="min-height:100vh;background:var(--pc-bg);">
+
+    <div class="text-center mb-4">
+        <a href="/" class="pc-brand text-decoration-none d-inline-flex align-items-center gap-2 justify-content-center">
+            <span style="font-size:1.5rem;">🩺</span>
+            <span style="font-size:1.375rem;">PulseCare</span>
+        </a>
+        <p class="mb-0 mt-1" style="font-size:0.8125rem;color:var(--pc-text-subtle);letter-spacing:0.03em;">Clinical Telehealth Platform</p>
+    </div>
+
+    <div style="width:100%;max-width:480px;padding:0 1rem;">
+        <div class="card">
+            <div class="card-body p-5">
+
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                         style="width:60px;height:60px;background:var(--pc-primary-subtle);border:1px solid var(--pc-border);">
+                        <span class="fs-3">🩺</span>
+                    </div>
+                    <h3 class="fw-bold mb-1" style="color:var(--pc-text);">Welcome to PulseCare</h3>
+                    <p class="small mb-0" style="color:var(--pc-text-muted);">Access your protected medical portal</p>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="mb-4 p-3 d-flex align-items-center small"
+                         style="background:var(--pc-danger-subtle);color:var(--pc-danger);border:1px solid #fca5a5;border-radius:var(--pc-radius-sm);">
+                        <span class="me-2">⚠️</span> @ViewBag.Error
+                    </div>
+                }
+
+                <form method="post" asp-action="Login" asp-controller="Account">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input type="email" name="email" class="form-control" required placeholder="example@pulsecare.com" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control pc-password-input" required placeholder="••••••••" style="border-right: none;" />
+                            <span class="input-group-text pc-password-toggle-btn text-muted"
+                                  style="background: #ffffff; border-color: #cbd5e1; border-left: none; cursor: pointer; padding-right: 14px; padding-left: 10px; display: flex; align-items: center; justify-content: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-medium py-2">Sign In</button>
+                </form>
+
+                <div class="mt-4 pt-3 text-center" style="border-top:1px solid var(--pc-border);">
+                    <span class="pc-badge pc-badge-neutral mb-3 d-inline-flex">Development Sandboxed Accounts</span>
+                    <div style="font-size:0.8125rem;color:var(--pc-text-muted);">
+                        <div class="p-2 mb-2 d-flex justify-content-between" style="background:var(--pc-surface-raised);border:1px solid var(--pc-border);border-radius:var(--pc-radius-sm);">
+                            <span>Patient: <code>patient@pulsecare.com</code></span> <span style="color:var(--pc-text-subtle);">Pass: 123</span>
+                        </div>
+                        <div class="p-2 mb-2 d-flex justify-content-between" style="background:var(--pc-surface-raised);border:1px solid var(--pc-border);border-radius:var(--pc-radius-sm);">
+                            <span>Doctor: <code>doctor@pulsecare.com</code></span> <span style="color:var(--pc-text-subtle);">Pass: 123</span>
+                        </div>
+                        <div class="p-2 d-flex justify-content-between" style="background:var(--pc-surface-raised);border:1px solid var(--pc-border);border-radius:var(--pc-radius-sm);">
+                            <span>Admin: <code>admin@pulsecare.com</code></span> <span style="color:var(--pc-text-subtle);">Pass: 123</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 🔑 FIX: Bulletproof line-art script toggles to keep icons visually sharp
+            const eyeOpenIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+            $('.pc-password-toggle-btn').on('click', function () {
+                var toggleBtn = $(this);
+                var input = toggleBtn.siblings('.pc-password-input');
+
+                if (input.attr('type') === 'password') {
+                    input.attr('type', 'text');
+                    toggleBtn.html(eyeSlashIcon).addClass('text-primary').removeClass('text-muted');
+                } else {
+                    input.attr('type', 'password');
+                    toggleBtn.html(eyeOpenIcon).addClass('text-muted').removeClass('text-primary');
+                }
+            });
+        });
+    </script>
+}

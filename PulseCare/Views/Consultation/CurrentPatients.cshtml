@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Current Patients";
+}
+
+<div class="pc-page-header mb-4">
+    <h3 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.5px;">Active & Assigned Patients</h3>
+    <p class="small mb-0" style="color: var(--pc-text-muted);">Directory index of assigned patients with upcoming clinical slots or active consultations</p>
+</div>
+
+<div class="card border-0 shadow-sm overflow-hidden bg-white mb-5" style="border-radius: 8px;">
+    <div class="table-responsive">
+        <table class="table align-middle pc-table mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Patient Profile Name</th>
+                    <th>Secure Routing Email</th>
+                    <th>Next Scheduled Intake</th>
+                    <th class="pe-4">Primary Case Symptoms</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.ActivePatients == null || ViewBag.ActivePatients.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted small">
+                            <span class="fs-4 d-block mb-2">👥</span>
+                            There are currently no patients with active or pending slots assigned to your clinic schedule.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var patient in ViewBag.ActivePatients)
+                    {
+                        <tr class="border-bottom">
+                            <td class="ps-4 fw-semibold text-dark">@patient.PatientName</td>
+                            <td class="font-monospace text-secondary" style="font-size: 0.85rem;">@patient.PatientEmail</td>
+                            <td class="text-primary small fw-medium">
+                                @patient.NextConsultationDate.ToString("MM/dd/yyyy hh:mm tt")
+                            </td>
+                            <td class="text-muted small text-truncate pe-4" style="max-width: 340px;" title="@patient.CaseIssue">
+                                @patient.CaseIssue
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="text-muted text-start mt-4" style="font-size: 0.75rem; letter-spacing: 0.02em; opacity: 0.7;">
+    PHYSICIAN DIRECTORY CONTEXT LAYER MAP: <span class="font-monospace fw-bold text-primary">#PC-DOC-PATIENTS</span>
+</div>

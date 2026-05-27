@@ -1,0 +1,209 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PulseCare</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PulseCare.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var hideSidebar = ViewData["HideSidebar"] is bool hb && hb;
+        var ctrl = ViewContext.RouteData.Values["controller"]?.ToString();
+        var act = ViewContext.RouteData.Values["action"]?.ToString();
+
+        var sessionName = Context.Session.GetString("UserName");
+        var sessionRole = Context.Session.GetString("UserRole");
+
+        var isAdmin = sessionRole == "Admin";
+        var isDoctor = sessionRole == "Doctor";
+        var homeLink = isAdmin ? "/Admin/Dashboard" : (isDoctor ? "/Home/DoctorDashboard" : "/Home/PatientDashboard");
+    }
+
+    <div class="pc-layout">
+
+        @if (!hideSidebar)
+        {
+            <div class="pc-mobile-header d-flex d-md-none align-items-center justify-content-between px-4 py-3">
+                <a href="@homeLink" class="pc-brand d-flex align-items-center gap-2">
+                    <span>🩺</span><span>PulseCare</span>
+                </a>
+                <button class="btn btn-sm btn-light border" id="sidebarToggle" aria-label="Open navigation">☰</button>
+            </div>
+
+            <aside class="pc-sidebar" id="pcSidebar">
+
+                <div class="pc-sidebar-brand">
+                    <a href="@homeLink" class="pc-brand d-flex align-items-center gap-2">
+                        <span>🩺</span>
+                        <span>PulseCare</span>
+                    </a>
+                    <div class="pc-sidebar-subtitle">
+                        @(isAdmin ? "System Administration" : (isDoctor ? "Physician Portal" : "Patient Portal"))
+                    </div>
+                </div>
+
+                <nav class="pc-sidebar-nav d-flex flex-column gap-1">
+                    @if (isAdmin)
+                    {
+                        <a href="/Admin/Dashboard" class="pc-sidebar-link @(ctrl == "Admin" && act == "Dashboard" ? "active" : "")">
+                            <span class="pc-sidebar-icon">⚙️</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+                        <a href="/Admin/Doctors" class="pc-sidebar-link @(ctrl == "Admin" && act == "Doctors" ? "active" : "")">
+                            <span class="pc-sidebar-icon">🥼</span>
+                            <span>Manage Doctors</span>
+                        </a>
+                        <a href="/Admin/Patients" class="pc-sidebar-link @(ctrl == "Admin" && act == "Patients" ? "active" : "")">
+                            <span class="pc-sidebar-icon">👥</span>
+                            <span>Manage Patients</span>
+                        </a>
+                    }
+                    else if (isDoctor)
+                    {
+                        <a href="/Home/DoctorDashboard" class="pc-sidebar-link @(ctrl == "Home" && act == "DoctorDashboard" ? "active" : "")">
+                            <span class="pc-sidebar-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="/Consultation/Queue" class="pc-sidebar-link @(ctrl == "Consultation" && act == "Queue" ? "active" : "")">
+                            <span class="pc-sidebar-icon">👥</span>
+                            <span>Patient Queue</span>
+                        </a>
+                        <a href="/Consultation/CurrentPatients" class="pc-sidebar-link @(ctrl == "Consultation" && act == "CurrentPatients" ? "active" : "")">
+                            <span class="pc-sidebar-icon">📋</span>
+                            <span>Current Patients</span>
+                        </a>
+                        <a href="/Consultation/PatientHistory" class="pc-sidebar-link @(ctrl == "Consultation" && act == "PatientHistory" ? "active" : "")">
+                            <span class="pc-sidebar-icon">📜</span>
+                            <span>Patient History</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/Home/PatientDashboard" class="pc-sidebar-link @(act == "PatientDashboard" ? "active" : "")">
+                            <span class="pc-sidebar-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="/Appointment/Book" class="pc-sidebar-link @(act == "Book" ? "active" : "")">
+                            <span class="pc-sidebar-icon">🗓️</span>
+                            <span>Book Appointment</span>
+                        </a>
+                        <a href="/Appointment/MyAppointments" class="pc-sidebar-link @(ctrl == "Appointment" && act == "MyAppointments" ? "active" : "")">
+                            <span class="pc-sidebar-icon">📋</span>
+                            <span>My Appointments</span>
+                        </a>
+                        <a href="/Reminder/Index" class="pc-sidebar-link @(ctrl == "Reminder" ? "active" : "")">
+                            <span class="pc-sidebar-icon">💊</span>
+                            <span>Health Plan</span>
+                        </a>
+                    }
+                </nav>
+
+                <div class="mt-auto" style="border-top: 1px solid var(--pc-border); padding-top: 1rem;">
+                    @if (!string.IsNullOrEmpty(sessionName))
+                    {
+                        <div class="pc-sidebar-user d-flex align-items-center justify-content-between w-100 pe-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="pc-sidebar-avatar">
+                                    @(sessionName[0].ToString().ToUpper())
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-truncate" style="font-size:0.875rem; color:var(--pc-text); max-width:130px;">@sessionName</div>
+                                    <div style="font-size:0.75rem; color:var(--pc-text-subtle);">
+                                        @(isAdmin ? "Admin" : (isDoctor ? "Physician" : "Patient"))
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="/Settings" class="d-flex align-items-center justify-content-center p-2 rounded text-decoration-none"
+                               title="Portal Settings"
+                               style="color: var(--pc-text-subtle); transition: background-color 0.15s ease, color 0.15s ease;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    }
+
+                    <button type="button" class="pc-sidebar-link pc-sidebar-link-danger mt-1 w-100 text-start bg-transparent border-0 d-flex align-items-center gap-2"
+                            data-bs-toggle="modal" data-bs-target="#logoutConfirmationModal">
+                        <span class="pc-sidebar-icon d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                            </svg>
+                        </span>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+
+            </aside>
+        }
+
+        <div class="@(hideSidebar ? "pc-full-content" : "pc-content-area")">
+            <main role="main" class="pb-5 mb-5 flex-grow-1">
+                @RenderBody()
+            </main>
+        </div>
+
+    </div>
+
+    <footer class="footer pc-footer-full">
+        <div class="d-flex align-items-center justify-content-between @(hideSidebar ? "container" : "px-4")">
+            <span>&copy; 2026 — <strong style="color:var(--pc-text);">PulseCare</strong></span>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="logoutConfirmationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+                <div class="modal-body p-4 text-center">
+                    <div class="mb-3" style="color: #ef4444;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">Confirm Session Exit</h5>
+                    <p class="small text-muted mb-4">Are you sure you want to log out? This will terminate your secure health session authorization logs immediately.</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-light border small px-3.5" data-bs-dismiss="modal">Stay Connected</button>
+                        <a href="/Account/Logout" class="btn btn-danger small px-4 fw-semibold text-white" style="color: #ffffff !important;">Confirm Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+        var toggle  = document.getElementById('sidebarToggle');
+        var sidebar = document.getElementById('pcSidebar');
+        if (!toggle || !sidebar) return;
+
+        toggle.addEventListener('click', function () {
+        sidebar.classList.toggle('is-open');
+        });
+
+        sidebar.querySelectorAll('.pc-sidebar-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+        sidebar.classList.remove('is-open');
+        });
+        });
+        })();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

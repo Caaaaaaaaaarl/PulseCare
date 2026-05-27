@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="pc-page-header mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+        <div>
+            <h2 class="fw-bold mb-1" style="color:var(--pc-text);letter-spacing:-0.5px;">Control Desk: @ViewBag.UserName</h2>
+            <p class="mb-0 d-flex align-items-center gap-2" style="color:var(--pc-text-muted);">
+                <span class="pc-badge font-monospace px-2.5 py-1 text-white rounded" style="background-color: #0f172a !important; color: #ffffff !important; font-size: 0.75rem; font-weight: 600;">System Root Instance</span>
+                <span>Security Clearance Level-01 Authorized</span>
+            </p>
+        </div>
+        <button type="button" class="btn btn-primary fw-medium px-4 mt-3 mt-md-0 d-inline-flex align-items-center gap-2">
+            <span>➕</span> Register New User Account
+        </button>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100">
+            <div class="pc-stat-label">Global Queue Cadence</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value">18</span>
+                <span class="pc-stat-sub ms-1">Active Patients</span>
+            </div>
+            <div class="flat-progress-bar mt-2"><div class="flat-progress-fill w-75 bg-info"></div></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100">
+            <div class="pc-stat-label">Financial Revenue Ledger</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value" style="color: var(--pc-success);">₱42.5K</span>
+                <span class="pc-stat-sub ms-1">Gross Settled</span>
+            </div>
+            <span class="pc-badge pc-badge-success mt-2 d-inline-flex">Settlements Clear</span>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100">
+            <div class="pc-stat-label">Smart Triage Load</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value">99.4%</span>
+                <span class="pc-stat-sub ms-1">Analysis Rate</span>
+            </div>
+            <span class="pc-badge pc-badge-neutral mt-2 d-inline-flex">Classification Stable</span>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100">
+            <div class="pc-stat-label">Active Portal Bandwidth</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value">144</span>
+                <span class="pc-stat-sub ms-1">Live Nodes</span>
+            </div>
+            <span class="pc-badge pc-badge-primary mt-2 d-inline-flex">Optimal Latency</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+
+    <div class="col-12">
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-header py-3 px-4 d-flex align-items-center justify-content-between" style="background-color: #f8fafc !important; border-bottom: 1px solid var(--pc-border) !important;">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fs-4">🥼</span>
+                    <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">Physician Registry Management</h5>
+                </div>
+                <span class="badge bg-primary bg-opacity-10 text-primary font-monospace small px-2 py-1 rounded">@ViewBag.Doctors.Count Active Staff</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle pc-table mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Staff Name ID</th>
+                            <th>Secure Login Access Email</th>
+                            <th>Designated Core Role</th>
+                            <th class="text-end pe-4">Administrative Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doc in ViewBag.Doctors)
+                        {
+                            <tr class="border-bottom">
+                                <td class="ps-4 fw-semibold text-dark">@doc.FullName</td>
+                                <td class="text-secondary font-monospace">@doc.Email</td>
+                                <td><span class="pc-badge pc-badge-primary">Medical Practitioner</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-2">
+                                        <button type="button" class="btn btn-sm btn-light border py-1 px-2.5 small text-dark fw-medium">Edit Profile</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2.5 small fw-medium">Remove Access</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-header py-3 px-4 d-flex align-items-center justify-content-between" style="background-color: #f8fafc !important; border-bottom: 1px solid var(--pc-border) !important;">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fs-4">👥</span>
+                    <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">Patient Registry Management</h5>
+                </div>
+                <span class="badge bg-success bg-opacity-10 text-success font-monospace small px-2 py-1 rounded">@ViewBag.Patients.Count Registered</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle pc-table mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Patient Full Name</th>
+                            <th>Registered Email Account</th>
+                            <th>Diagnostic Tier Assignment</th>
+                            <th class="text-end pe-4">Administrative Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pat in ViewBag.Patients)
+                        {
+                            <tr class="border-bottom">
+                                <td class="ps-4 fw-semibold text-dark">@pat.FullName</td>
+                                <td class="text-secondary font-monospace">@pat.Email</td>
+                                <td><span class="pc-badge pc-badge-neutral">Standard Endpoint Node</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-2">
+                                        <button type="button" class="btn btn-sm btn-light border py-1 px-2.5 small text-dark fw-medium">Edit Profile</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2.5 small fw-medium">Remove Access</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="fw-bold mb-0 text-dark">System Timeline Infrastructure Audits</h6>
+            <span class="font-monospace text-muted" style="font-size:0.75rem;">TELEMETRY STREAM</span>
+        </div>
+        <div class="d-flex flex-column gap-2 text-muted small">
+            <div class="pc-timeline-entry entry-archived">
+                <div><strong>10:14 AM</strong> — Session Purge cleared cache instance <code>#PC-902</code></div>
+                <span class="pc-badge pc-badge-neutral">Complete</span>
+            </div>
+            <div class="pc-timeline-entry entry-archived">
+                <div><strong>08:45 AM</strong> — Account Registry verified database node mapping sequence</div>
+                <span class="pc-badge pc-badge-neutral">Logged</span>
+            </div>
+            <div class="pc-timeline-entry entry-next shadow-none border bg-light">
+                <div class="text-dark"><strong>05:22 AM</strong> — Security framework rotated cryptographic root identity session seed keys</div>
+                <span class="pc-badge pc-badge-primary">System Auth</span>
+            </div>
+        </div>
+    </div>
+</div>

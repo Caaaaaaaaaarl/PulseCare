@@ -1,0 +1,156 @@
+﻿@model IEnumerable<PulseCare.Models.User>
+@{
+    ViewData["Title"] = "Manage Patients";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h3 class="fw-bold mb-1" style="color:var(--pc-text);letter-spacing:-0.5px;">Manage Patients</h3>
+        <p class="small mb-0" style="color:var(--pc-text-muted);">Review patient file records and endpoint connection states</p>
+    </div>
+    <button type="button" class="btn btn-success text-white fw-medium px-4 d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#registerPatientModal" style="background-color: #10b981; border-color: #10b981; border-radius: 4px;">
+        <span>➕</span> Register New Patient
+    </button>
+</div>
+
+<div class="card border-0 shadow-sm overflow-hidden bg-white mb-5" style="border-radius: 8px;">
+    <div class="table-responsive">
+        <table class="table align-middle pc-table mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Patient Full Name</th>
+                    <th>Registered Account Email</th>
+                    <th>System Designation Tier</th>
+                    <th class="text-end pe-4">Administrative Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted small">No patient profiles found in database storage.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var pat in Model)
+                    {
+                        <tr class="border-bottom">
+                            <td class="ps-4 fw-semibold text-dark">@pat.FullName</td>
+                            <td class="text-secondary font-monospace" style="font-size: 0.85rem;">@pat.Email</td>
+                            <td><span class="pc-badge pc-badge-neutral" style="background-color: #f1f5f9; color: #475569; font-weight: 600;">Standard Patient Node</span></td>
+                            <td class="text-end pe-4">
+                                <div class="d-inline-flex gap-2">
+                                    <button type="button" class="btn btn-sm btn-light border py-1.5 px-2.5 text-dark fw-medium" data-bs-toggle="modal" data-bs-target="#editPatientModal" data-id="@pat.Id" data-name="@pat.FullName" data-email="@pat.Email" style="font-size: 0.85rem; border-radius: 4px;">Edit Profile</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger py-1.5 px-2.5 fw-medium" data-bs-toggle="modal" data-bs-target="#removePatientModal" data-id="@pat.Id" data-name="@pat.FullName" style="font-size: 0.85rem; border-radius: 4px;">Remove</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="registerPatientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:12px;">
+            <div class="modal-header py-3 px-4 border-0 text-white" style="background:#10b981;">
+                <h5 class="modal-title fw-bold">Register Patient Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Admin/CreateAccount">
+                <input type="hidden" name="role" value="Patient" />
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Patient Full Name</label>
+                        <input type="text" name="fullName" class="form-control" required placeholder="e.g. Adrian Kim" style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Email Address</label>
+                        <input type="email" name="email" class="form-control" required placeholder="patient@example.com" style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Access Password</label>
+                        <input type="password" name="password" class="form-control" required placeholder="123" style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                </div>
+                <div class="modal-footer border-top p-3 d-flex justify-content-between bg-light" style="border-radius: 0 0 12px 12px;">
+                    <button type="button" class="btn btn-light border btn-sm px-3.5" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                    <button type="submit" class="btn btn-success btn-sm text-white px-4 fw-semibold" style="background-color: #10b981; border-color: #10b981; border-radius: 4px;">Save File</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editPatientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:12px;">
+            <div class="modal-header py-3 px-4 border-0 text-white" style="background:#0f172a;">
+                <h5 class="modal-title fw-bold">Modify Patient Profile</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Admin/EditAccount">
+                <input type="hidden" name="id" id="editPatId" />
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Full Name</label>
+                        <input type="text" name="fullName" id="editPatName" class="form-control" required style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Email Address</label>
+                        <input type="email" name="email" id="editPatEmail" class="form-control" required style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                    <div class="mb-1">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Update Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Leave empty to retain configuration" style="border-color: #cbd5e1; border-radius: 6px;" />
+                    </div>
+                </div>
+                <div class="modal-footer border-top p-3 d-flex justify-content-between bg-light" style="border-radius: 0 0 12px 12px;">
+                    <button type="button" class="btn btn-light border btn-sm px-3.5" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold" style="background-color: #0f172a; border-color: #0f172a; border-radius: 4px;">Update File</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removePatientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:12px;">
+            <div class="modal-body p-4 text-center">
+                <div class="text-danger fs-1 mb-2">⚠️</div>
+                <h5 class="fw-bold text-dark mb-2">Confirm Removal</h5>
+                <p class="small text-muted mb-4" style="line-height: 1.4;">Are you sure you want to permanently delete patient <strong id="removePatName" class="text-dark">user</strong>? All medical histories, reminders, and consultation sessions linked to this file will be wiped.</p>
+                <form method="post" action="/Admin/RemoveAccount">
+                    <input type="hidden" name="id" id="removePatId" />
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-light border btn-sm px-4" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                        <button type="submit" class="btn btn-danger btn-sm px-4 fw-semibold text-white" style="background-color: #dc2626; border-color: #dc2626; border-radius: 4px;">Confirm Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#editPatientModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                $('#editPatId').val(button.data('id'));
+                $('#editPatName').val(button.data('name'));
+                $('#editPatEmail').val(button.data('email'));
+            });
+
+            $('#removePatientModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                $('#removePatId').val(button.data('id'));
+                $('#removePatName').text(button.data('name'));
+            });
+        });
+    </script>
+}

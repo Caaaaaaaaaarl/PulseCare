@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="pc-page-header mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+        <div>
+            <h2 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.5px;">Control Desk: @ViewBag.UserName</h2>
+            <p class="mb-0 d-flex align-items-center gap-2" style="color: var(--pc-text-muted); font-size: 0.9rem;">
+                <span class="pc-badge font-monospace px-2.5 py-1 text-white rounded" style="background-color: #0f172a !important; color: #ffffff !important; font-size: 0.75rem; font-weight: 600;">System Root Instance</span>
+                <span>Operational Telemetry Monitoring Interface</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Global Queue Cadence</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">@ViewBag.ActivePatientsCount</span>
+                <span class="pc-stat-sub text-muted small ms-1">Active Patients</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: 75%; background-color: #0284c7 !important;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Financial Revenue Ledger</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold fs-2" style="color: #10b981;">@ViewBag.GrossRevenue</span>
+                <span class="pc-stat-sub text-muted small ms-1">Gross Settled</span>
+            </div>
+            <div class="mt-2">
+                <span class="badge px-2.5 py-1 rounded" style="background-color: #e6f4ea; color: #137333; font-size: 0.725rem; font-weight: 600;">Settlements Clear</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Smart Triage Load</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">@ViewBag.AnalysisRate%</span>
+                <span class="pc-stat-sub text-muted small ms-1">Analysis Rate</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: @ViewBag.AnalysisRate%;"></div>
+            </div>
+            <div class="mt-1 text-muted font-monospace" style="font-size: 0.7rem;">Classification Stable</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card pc-stat-card h-100 border shadow-sm p-3" style="background: #ffffff; border-radius: 8px;">
+            <div class="pc-stat-label text-uppercase text-muted font-monospace mb-1" style="font-size: 0.725rem; letter-spacing: 0.05em;">Active Portal Bandwidth</div>
+            <div class="d-flex align-items-baseline gap-1">
+                <span class="pc-stat-value fw-bold text-dark fs-2">@ViewBag.LiveNodesCount</span>
+                <span class="pc-stat-sub text-muted small ms-1">Live Nodes</span>
+            </div>
+            <div class="flat-progress-bar mt-2" style="height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                <div class="flat-progress-fill h-100" style="width: 100%; background-color: #e0f2fe !important;"></div>
+            </div>
+            <div class="mt-1 text-primary font-monospace" style="font-size: 0.7rem; font-weight: 500;">Optimal Latency</div>
+        </div>
+    </div>
+</div>
+
+<div class="card border border-light shadow-sm bg-white mb-4" style="border-radius: 8px;">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">System Timeline Infrastructure Audits</h6>
+            <span class="font-monospace text-muted" style="font-size: 0.725rem; letter-spacing: 0.05em;">TELEMETRY STREAM</span>
+        </div>
+
+        <div class="d-flex flex-column gap-1">
+            @if (ViewBag.SystemLogs.Count == 0)
+            {
+                <div class="py-3 text-center text-muted small">No structural tracking events committed to the database ledger yet.</div>
+            }
+            else
+            {
+                @foreach (var log in ViewBag.SystemLogs)
+                {
+                    <div class="py-2.5 d-flex align-items-center justify-content-between border-bottom" style="border-color: #f1f5f9 !important;">
+                        <div class="small text-secondary" style="font-size: 0.875rem;">
+                            <strong class="text-dark font-monospace" style="font-weight: 600;">@log.LogTime</strong> — @log.Description
+                        </div>
+                        <span class="badge bg-white border font-monospace" style="font-size: 0.725rem; padding: 4px 8px; color: #64748b !important;">@log.Tag</span>
+                    </div>
+                }
+            }
+        </div>
+
+    </div>
+</div>
+
+<div class="text-muted text-start mt-4" style="font-size: 0.75rem; letter-spacing: 0.02em; opacity: 0.7;">
+    GLOBAL INFRASTRUCTURE DOMAIN CENTRAL HUB MAP: <span class="font-monospace fw-bold text-primary">#PC-ADM-CORE</span>
+</div>

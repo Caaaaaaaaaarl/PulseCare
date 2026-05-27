@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<div class="pc-page-header mb-4">
+    <h3 class="fw-bold mb-1" style="color:var(--pc-text);">Schedule Virtual Consultation</h3>
+    <p class="small mb-0" style="color:var(--pc-text-muted);">Fill out the parameters below to join our clinical queue</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card">
+
+            <div class="card-header d-flex align-items-center gap-3 py-4" style="background-color: var(--pc-primary) !important; border-bottom: none !important;">
+                <span class="fs-3">🩺</span>
+                <div>
+                    <h5 class="mb-0 fw-bold text-white">Schedule Virtual Consultation</h5>
+                    <p class="mb-0 small text-white-50">Fill out the parameters below to join our clinical queue</p>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form method="post" asp-action="Book" asp-controller="Appointment">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Select Physician</label>
+                        <select name="doctorId" class="form-select" required>
+                            <option value="">-- Choose a Doctor --</option>
+                            @foreach (var doctor in ViewBag.Doctors)
+                            {
+                                <option value="@doctor.Id">@doctor.FullName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Preferred Date & Time</label>
+                        <input type="datetime-local" name="appointmentDate" class="form-control" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Describe your symptoms</label>
+                        <div class="p-3 mb-2 d-flex align-items-start"
+                             style="background:var(--pc-surface-raised);border:1px solid var(--pc-border);border-radius:var(--pc-radius-sm);">
+                            <span class="me-2">🤖</span>
+                            <small class="d-block" style="color:var(--pc-text-muted);">
+                                Our <strong style="color:var(--pc-text);">Smart Triage</strong> system will analyze
+                                your symptoms to prioritize your care automatically.
+                            </small>
+                        </div>
+                        <textarea name="symptoms" class="form-control" rows="4"
+                                  placeholder="e.g., I have had a high fever and severe headache for 2 days..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="d-flex flex-column-reverse flex-sm-row justify-content-between gap-3 mt-5 pt-3"
+                         style="border-top:1px solid var(--pc-border);">
+                        <a href="/Home/PatientDashboard" class="btn btn-light border px-4"
+                           style="color:var(--pc-text-muted);">Cancel</a>
+                        <button type="submit" class="btn btn-primary fw-semibold px-5">Submit Request</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
