@@ -15,21 +15,24 @@ namespace PulseCare.Controllers
             _context = context;
         }
 
+        // GET: / - The absolute root entrance node of the PulseCare system application platform
         public IActionResult Index()
         {
             var role = HttpContext.Session.GetString("UserRole");
+
+            // If session security data exists, route directly to workspace nodes automatically
             if (role == "Doctor") return RedirectToAction("DoctorDashboard");
             if (role == "Patient") return RedirectToAction("PatientDashboard");
             if (role == "Admin") return RedirectToAction("Dashboard", "Admin");
 
-            return RedirectToAction("Login", "Account");
+            // 🔑 FIX: Instead of RedirectToAction("Login"), serve the new public identity landing panel view
+            return View();
         }
 
         public IActionResult PatientDashboard()
         {
             if (HttpContext.Session.GetString("UserRole") != "Patient") return RedirectToAction("Login", "Account");
 
-            // Safe parsing fallback to resolve CS8604 nullability warnings
             string userIdStr = HttpContext.Session.GetString("UserId") ?? "0";
             int patientId = int.Parse(userIdStr);
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
@@ -62,33 +65,42 @@ namespace PulseCare.Controllers
         {
             if (HttpContext.Session.GetString("UserRole") != "Doctor") return RedirectToAction("Login", "Account");
 
-            // Safe parsing fallback to resolve CS8604 nullability warnings
             string userIdStr = HttpContext.Session.GetString("UserId") ?? "0";
             int doctorId = int.Parse(userIdStr);
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
 
-            // 📊 1. Patients in Queue: Count of pending appointments assigned to this specific doctor
             ViewBag.QueueCount = _context.Appointments.Count(a => a.DoctorId == doctorId && a.Status == "Pending");
 
-            // ⚠️ 2. Critical Alerts: High-risk screening flags derived from patient case notes
             ViewBag.CriticalAlerts = _context.Appointments.Count(a => a.DoctorId == doctorId && a.Status == "Pending" &&
                 (a.Symptoms.Contains("fever") || a.Symptoms.Contains("severe") || a.Symptoms.Contains("chest") || a.Symptoms.Contains("pain")));
 
-            // 📋 3. Charts Compiled Today: Total processed records completed by this doctor context node
             ViewBag.ChartsCompiled = _context.Appointments.Count(a => a.DoctorId == doctorId && a.Status == "Completed");
 
-            // ⏳ 4. Shift Logs Feed: Stream top 3 appointments for this doctor joined with patient full name metadata fields
-            // 🔑 FIX: Changed 'asc' to C#'s valid 'ascending' keyword to fully clear the query expression compiler layout state
-            var realTimeShiftLogs = (from a in _context.Appointments
-                                     join u in _context.Users on a.PatientId equals u.Id
-                                     where a.DoctorId == doctorId
-                                     orderby a.AppointmentDate ascending
-                                     select new
-                                     {
-                                         LogTime = a.AppointmentDate.ToString("hh:mm tt"),
-                                         PatientLabel = u.FullName,
-                                         StatusText = a.Status == "Completed" ? "Archived" : "Next Case"
-                                     }).Take(3).ToList();
+            var rawShiftLogs = (from a in _context.Appointments
+                                join u in _context.Users on a.PatientId equals u.Id
+                                where a.DoctorId == doctorId
+                                orderby a.AppointmentDate ascending
+                                select new
+                                {
+                                    LogTime = a.AppointmentDate.ToString("hh:mm tt"),
+                                    PatientLabel = u.FullName,
+                                    RawSymptoms = a.Symptoms,
+                                    StatusText = a.Status == "Completed" ? "Archived" : "Next Case"
+                                }).Take(3).ToList();
+
+            var realTimeShiftLogs = rawShiftLogs.Select(rs => {
+                string cleanSymptoms = rs.RawSymptoms;
+                if (cleanSymptoms.Contains("]"))
+                {
+                    cleanSymptoms = cleanSymptoms.Substring(cleanSymptoms.IndexOf("]") + 1).Trim();
+                }
+                return new
+                {
+                    rs.LogTime,
+                    PatientLabel = $"{rs.PatientLabel} ({cleanSymptoms})",
+                    rs.StatusText
+                };
+            }).ToList();
 
             ViewBag.ShiftLogs = realTimeShiftLogs;
 
