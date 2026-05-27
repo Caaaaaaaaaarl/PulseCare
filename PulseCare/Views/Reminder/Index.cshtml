@@ -3,122 +3,49 @@
     ViewData["Title"] = "My Health Plan & Reminders";
 }
 
-<div class="pc-page-header mb-4">
-    <h3 class="fw-bold mb-1" style="color: var(--pc-text); letter-spacing: -0.5px;">My Health Plan & Reminders</h3>
-    <p class="small mb-0" style="color: var(--pc-text-muted);">Track your daily wellness targets and prescriptions</p>
-</div>
+<div class="container mt-4">
+    <h3 class="text-success mb-4">My Health Plan & Reminders</h3>
 
-<div class="row g-4 mb-5" id="healthPlanGrid">
-    @if (!Model.Any())
+    @if (Model == null || !Model.Any())
     {
-        <div class="col-12">
-            <div class="card border-0 shadow-sm bg-white text-center py-5" style="border-radius: 8px;">
-                <div class="card-body py-4">
-                    <div class="fs-1 mb-2">🎉</div>
-                    <p class="text-muted mb-0">Excellent work! All your prescription tracks and care plans are fully completed for today.</p>
-                </div>
-            </div>
+        <div class="alert alert-info shadow-sm">
+            You currently have no active health reminders. Book a consultation to get your personalized diet and medication plan!
         </div>
     }
     else
     {
-        @foreach (var item in Model)
-        {
-            <div class="col-12 col-md-6" id="reminder-card-@item.Id" style="transition: all 0.4s ease;">
-                <div class="card h-100 border border-light shadow-sm bg-white position-relative overflow-hidden"
-                     style="border-left: 4px solid #10b981 !important; border-radius: 8px;">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm @(item.IsCompleted ? "border-secondary bg-light" : "border-success")">
+                        <div class="card-body">
+                            <h5 class="card-title @(item.IsCompleted ? "text-muted text-decoration-line-through" : "text-dark")">
+                                @item.Message
+                            </h5>
+                            <p class="card-text text-muted mb-3">
+                                <small>Scheduled for: @item.ReminderDate.ToString("MMM dd, yyyy")</small>
+                            </p>
 
-                    <div class="card-body p-4 d-flex flex-column h-100">
-                        <div class="mb-2">
-                            <span class="fs-4">💊</span>
-                        </div>
-
-                        <h5 class="fw-bold text-dark mb-3 fs-6 flex-grow-1" style="line-height: 1.4; letter-spacing: -0.1px;">
-                            @item.Message
-                        </h5>
-
-                        <div class="d-flex align-items-center gap-1.5 text-muted small mb-4 font-monospace" style="font-size: 0.775rem;">
-                            <span>🗓️</span>
-                            <span>Scheduled for: <strong class="text-dark">@item.ReminderDate.ToString("MMMM dd, yyyy")</strong></span>
-                        </div>
-
-                        <div class="mt-auto">
-                            <button type="button"
-                                    class="btn btn-success w-100 fw-semibold py-2.5 action-mark-done-btn"
-                                    data-id="@item.Id"
-                                    style="background-color: #10b981; border-color: #10b981; font-size: 0.9rem; border-radius: 6px;">
-                                Mark as Done
-                            </button>
+                            @if (!item.IsCompleted)
+                            {
+                                <form method="post" asp-action="MarkComplete" asp-controller="Reminder">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success fw-bold">Mark as Done</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Completed</span>
+                            }
                         </div>
                     </div>
-
                 </div>
-            </div>
-        }
+            }
+        </div>
     }
+
+    <div class="mt-4">
+        <a href="/Home/PatientDashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
 </div>
-
-<div class="pt-3" style="border-top: 1px solid #e2e8f0;">
-    <a href="/Home/PatientDashboard" class="btn btn-light border btn-sm px-4 py-2 text-secondary fw-medium" style="font-size: 0.85rem; border-radius: 4px;">
-        ← Back to Dashboard
-    </a>
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Background Click Callback Handler Interceptor Interface
-            $('.action-mark-done-btn').on('click', function () {
-                var button = $(this);
-                var reminderId = button.data('id');
-                var targetCard = $('#reminder-card-' + reminderId);
-
-                // Prevent multiple clicks while running background operations
-                button.prop('disabled', true).text('Processing... ⏳');
-
-                // Fire safe, asynchronous POST transaction back to controller data lanes
-                $.ajax({
-                    url: '/Reminder/MarkComplete',
-                    type: 'POST',
-                    data: { id: reminderId },
-                    success: function (response) {
-                        if (response.success) {
-                            // Update display elements instantly to signal complete feedback state parameters
-                            button.removeClass('btn-success').css({ 'background-color': '#0f172a', 'border-color': '#0f172a' }).text('Completed! ✓');
-
-                            // Smoothly fade out and remove card element after short pause
-                            setTimeout(function () {
-                                targetCard.css({ 'opacity': '0', 'transform': 'scale(0.95)' });
-                                setTimeout(function () {
-                                    targetCard.remove();
-
-                                    // Render empty card view template automatically if zero elements are left
-                                    if ($('#healthPlanGrid').children().filter(':visible').length === 0) {
-                                        $('#healthPlanGrid').html(`
-                                            <div class="col-12">
-                                                <div class="card border-0 shadow-sm bg-white text-center py-5" style="border-radius: 8px;">
-                                                    <div class="card-body py-4">
-                                                        <div class="fs-1 mb-2">🎉</div>
-                                                        <p class="text-muted mb-0">Excellent work! All your prescription tracks and care plans are fully completed for today.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `);
-                                    }
-                                }, 400);
-                            }, 500);
-                        } else {
-                            // Fallback response mapping for structural processing edge cases
-                            alert('Transaction execution failed: ' + response.message);
-                            button.prop('disabled', false).text('Mark as Done');
-                        }
-                    },
-                    error: function () {
-                        alert('Connection dropped: Secure background context node validation mismatch.');
-                        button.prop('disabled', false).text('Mark as Done');
-                    }
-                });
-            });
-        });
-    </script>
-}

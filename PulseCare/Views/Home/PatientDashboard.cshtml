@@ -2,157 +2,31 @@
     ViewData["Title"] = "Patient Dashboard";
 }
 
-<div class="pc-page-header mb-4">
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
-        <div>
-            <h2 class="fw-bold mb-1" style="color:var(--pc-text); letter-spacing:-0.5px;">Welcome Back, @ViewBag.UserName 👋</h2>
-            <p class="mb-0 d-flex align-items-center gap-2" style="color:var(--pc-text-muted);">
-                <span class="pc-badge px-2.5 py-1 text-white rounded" style="background-color: #0284c7 !important; color: #ffffff !important; font-size: 0.75rem; font-weight: 600;">Patient Portal</span>
-                <span>Identity Verified Security Node Status Active</span>
-            </p>
-        </div>
-        <a href="/Appointment/Book" class="btn btn-primary fw-medium px-4 mt-3 mt-md-0 d-inline-flex align-items-center gap-2">
-            <span>🗓️</span> Book a New Consultation
-        </a>
-    </div>
-</div>
+<h2>Welcome, @ViewBag.UserName</h2>
+<p class="text-muted">Patient Portal</p>
+<hr />
 
-<div class="row g-3 mb-4">
-    <div class="col-12 col-md-4">
-        <div class="card pc-stat-card h-100">
-            <div class="pc-stat-label">Total Booked Consultations</div>
-            <div class="d-flex align-items-baseline gap-1">
-                <span class="pc-stat-value">@ViewBag.TotalAppointments</span>
-                <span class="pc-stat-sub ms-1">Records Found</span>
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Virtual Care</h5>
+                <p class="card-text">Book an e-medicine consultation with our specialists.</p>
+                <a href="/Appointment/Book" class="btn btn-light text-info">Book Appointment</a>
             </div>
-            <div class="flat-progress-bar mt-2"><div class="flat-progress-fill w-100 bg-secondary" style="background-color: #cbd5e1 !important;"></div></div>
         </div>
     </div>
-    <div class="col-6 col-md-4">
-        <div class="card pc-stat-card h-100">
-            <div class="pc-stat-label">Pending Approval Requests</div>
-            <div class="d-flex align-items-baseline gap-1">
-                <span class="pc-stat-value" style="color: var(--pc-primary);">@ViewBag.PendingRequests</span>
-                <span class="pc-stat-sub ms-1">In Queue</span>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Diet & Reminders</h5>
+                <p class="card-text">View your chronic care reminders and daily health plans.</p>
+                <a href="/Reminder/Index" class="btn btn-light text-success">View Health Plan</a>
             </div>
-            @if (ViewBag.PendingRequests > 0)
-            {
-                <span class="pc-badge pc-badge-neutral mt-2 d-inline-flex">Awaiting Practitioner</span>
-            }
-            else
-            {
-                <span class="pc-badge pc-badge-neutral mt-2 d-inline-flex">Queue Completely Clear</span>
-            }
-        </div>
-    </div>
-    <div class="col-6 col-md-4">
-        <div class="card pc-stat-card h-100">
-            <div class="pc-stat-label">Active Treatment Reminders</div>
-            <div class="d-flex align-items-baseline gap-1">
-                <span class="pc-stat-value" style="color: var(--pc-success);">@ViewBag.ActiveRemindersCount</span>
-                <span class="pc-stat-sub ms-1">Tasks Due</span>
-            </div>
-            @if (ViewBag.ActiveRemindersCount > 0)
-            {
-                <span class="pc-badge pc-badge-success mt-2 d-inline-flex">Action Required Today</span>
-            }
-            else
-            {
-                <span class="pc-badge pc-badge-neutral mt-2 d-inline-flex">Compliance Up to Date</span>
-            }
         </div>
     </div>
 </div>
 
-<div class="row g-4">
-    
-    <div class="col-lg-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header py-3 px-4 bg-white border-bottom d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="fs-5">📋</span>
-                    <h5 class="fw-bold mb-0 text-dark" style="font-size: 0.975rem;">Recent Schedule History</h5>
-                </div>
-                <a href="/Appointment/MyAppointments" class="small text-decoration-none fw-medium">View Full Ledger →</a>
-            </div>
-            <div class="card-body p-4">
-                <div class="d-flex flex-column gap-3">
-                    @if (ViewBag.RecentAppointmentsList.Count == 0)
-                    {
-                        <div class="text-center py-4 text-muted small">No session records found in your dashboard historical stream.</div>
-                    }
-                    else
-                    {
-                        @foreach (var app in ViewBag.RecentAppointmentsList)
-                        {
-                            <div class="p-3 rounded border bg-light d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="fw-semibold text-dark mb-0.5">@app.DoctorName</div>
-                                    <div class="text-secondary font-monospace" style="font-size: 0.75rem;">
-                                        @app.AppointmentDate.ToString("MM/dd/yyyy hh:mm tt")
-                                    </div>
-                                </div>
-                                <div>
-                                    @if (app.Status == "Completed")
-                                    {
-                                        <span class="pc-badge pc-badge-success">Concluded</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="pc-badge pc-badge-neutral">Pending</span>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header py-3 px-4 bg-white border-bottom d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="fs-5">💊</span>
-                    <h5 class="fw-bold mb-0 text-dark" style="font-size: 0.975rem;">Active Care Actions Required</h5>
-                </div>
-                <a href="/Reminder/Index" class="small text-decoration-none fw-medium text-success">Open Health Plan →</a>
-            </div>
-            <div class="card-body p-4">
-                <div class="d-flex flex-column gap-3">
-                    @if (ViewBag.ActiveRemindersList.Count == 0)
-                    {
-                        <div class="text-center py-4 text-muted small">
-                            🎉 Excellent work! You have no pending medications or uncompleted target logs left for today.
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var rem in ViewBag.ActiveRemindersList)
-                        {
-                            <div class="p-3 rounded border d-flex align-items-start justify-content-between bg-white" style="border-left: 4px solid var(--pc-success) !important;">
-                                <div class="pe-2">
-                                    <p class="mb-1 text-dark fw-medium small" style="line-height: 1.4;">@rem.Message</p>
-                                    <div class="text-muted font-monospace" style="font-size: 0.725rem;">
-                                        Target Date: @rem.ReminderDate.ToString("MM/dd/yyyy")
-                                    </div>
-                                </div>
-                                <form method="post" asp-action="MarkComplete" asp-controller="Reminder" asp-route-id="@rem.Id">
-                                    <button type="submit" class="btn btn-sm btn-light border py-1 px-2 text-dark font-monospace fw-semibold" style="font-size: 0.725rem;" title="Mark Task Done">
-                                        Done ✓
-                                    </button>
-                                </form>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="text-muted text-start mt-5" style="font-size:0.75rem; letter-spacing:0.02em; opacity: 0.6;">
-    PATIENT LANDING CONTEXT IDENTITY NODE MAP: <span class="font-monospace fw-bold text-primary">#PC-PAT-DASH</span>
+<div class="mt-5">
+    <a href="/Account/Logout" class="btn btn-outline-danger">Log Out</a>
 </div>
