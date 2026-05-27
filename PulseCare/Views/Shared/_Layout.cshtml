@@ -15,7 +15,7 @@
 </head>
 <body>
     @{
-        var hideSidebar = ViewData["HideSidebar"] is bool hb && hb;
+        var isExplicitlyHidden = ViewData["HideSidebar"] is bool hb && hb;
         var ctrl = ViewContext.RouteData.Values["controller"]?.ToString();
         var act = ViewContext.RouteData.Values["action"]?.ToString();
 
@@ -25,6 +25,8 @@
         var isAdmin = sessionRole == "Admin";
         var isDoctor = sessionRole == "Doctor";
         var homeLink = isAdmin ? "/Admin/Dashboard" : (isDoctor ? "/Home/DoctorDashboard" : "/Home/PatientDashboard");
+
+        var hideSidebar = isExplicitlyHidden || string.IsNullOrEmpty(sessionRole);
     }
 
     <div class="pc-layout">
